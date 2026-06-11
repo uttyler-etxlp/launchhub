@@ -21,35 +21,62 @@
 const BASE = "../content";
 
 async function loadData() {
-  const indexRes = await fetch(BASE + "/ventures/index.json");
-  const ventureFiles = await indexRes.json();
+  try {
+    // load ventures index
+    const indexRes = await fetch(BASE + "/ventures/index.json");
+    if (!indexRes.ok) throw new Error("Missing ventures index.json");
 
-  const studentIndex = await fetch(BASE + "/students/index.json");
-  const studentFiles = await studentIndex.json();
+    const ventureFiles = await indexRes.json();
 
-  const students = {};
+    // load students
+    const studentIndexRes = await fetch(BASE + "/students/index.json");
+    const studentFiles = await studentIndexRes.json();
 
-  for (let f of studentFiles) {
-    const res = await fetch(BASE + "/students/" + f);
-    const s = await res.json();
-    if (!s.placeholder) students[s.id] = s;
-  }
+    const students = {};
 
-  const ventures = [];
+    for (let f of studentFiles) {
+      const res = await fetch(BASE + "/students/" + f);
+      if (!res.ok) continue;
 
-  for (let file of ventureFiles) {
-    const res = await fetch(BASE + "/ventures/" + file);
-    const data = await res.json();
-
-    if (!data.placeholder) {
-      ventures.push(data);
+      const s = await res.json();
+      if (!s.placeholder) {
+        students[s.id] = s;
+      }
     }
-  }
 
-  render(ventures, students);
+    // load ventures
+    const ventures = [];
+
+    for (let file of ventureFiles) {
+      const res = await fetch(BASE + "/ventures/" + file);
+      if (!res.ok) {
+        console.error("Missing venture file:", file);
+        continue;
+      }
+
+      const v = await res.json();
+
+      if (!v.placeholder) {
+        ventures.push(v);
+      }
+    }
+
+    render(ventures, students);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("ventures").innerHTML =
+      "<p>Error loading ventures. Check console.</p>";
+  }
 }
 
 function render(ventures, students) {
+  if (ventures.length === 0) {
+    document.getElementById("ventures").innerHTML =
+      "<p>No ventures found yet.</p>";
+    return;
+  }
+
   let html = "";
 
   ventures.forEach(v => {
@@ -58,7 +85,7 @@ function render(ventures, students) {
     html += `
       <div class="bg-white p-5 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-[#002F6C]">
-          ${v.name}
+          ${v.name || "Unnamed"}
         </h2>
 
         <p class="text-sm text-gray-500">
