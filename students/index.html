@@ -21,31 +21,55 @@
 const BASE = "../content";
 
 async function loadStudents() {
-  const indexRes = await fetch(BASE + "/students/index.json");
-  const files = await indexRes.json();
-
-  const students = [];
-
-  for (let file of files) {
-    const res = await fetch(BASE + "/students/" + file);
-    const data = await res.json();
-
-    if (!data.placeholder) {
-      students.push(data);
+  try {
+    const indexRes = await fetch(BASE + "/students/index.json");
+    
+    if (!indexRes.ok) {
+      throw new Error("Failed to load index.json");
     }
-  }
 
-  render(students);
+    const files = await indexRes.json();
+
+    const students = [];
+
+    for (let file of files) {
+      const res = await fetch(BASE + "/students/" + file);
+
+      if (!res.ok) {
+        console.error("Failed to load:", file);
+        continue;
+      }
+
+      const data = await res.json();
+
+      if (!data.placeholder) {
+        students.push(data);
+      }
+    }
+
+    render(students);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("students").innerHTML =
+      "<p>Error loading students. Check console.</p>";
+  }
 }
 
 function render(students) {
+  if (students.length === 0) {
+    document.getElementById("students").innerHTML =
+      "<p>No students found yet.</p>";
+    return;
+  }
+
   let html = "";
 
   students.forEach(s => {
     html += `
       <div class="bg-white p-5 rounded-lg shadow">
         <h2 class="text-xl font-semibold text-[#002F6C]">
-          ${s.name}
+          ${s.name || "Unnamed"}
         </h2>
 
         <p class="text-sm text-gray-500">
@@ -54,10 +78,6 @@ function render(students) {
 
         <p class="mt-3 text-sm">
           ${s.bio || ""}
-        </p>
-
-        <p class="mt-4 text-xs text-gray-400">
-          Ventures: ${(s.ventures || []).join(", ")}
         </p>
       </div>
     `;
