@@ -9,7 +9,7 @@
 
 <div class="max-w-4xl mx-auto p-6">
 
-  <a href="./" class="text-sm text-blue-600">&larr; Back to Ventures</a>
+  <a href="./index.html" class="text-blue-600 text-sm">&larr; Back to Ventures</a>
 
   <div id="ventureDetail" class="mt-6"></div>
 
@@ -18,36 +18,41 @@
 <script>
 const BASE = "../content";
 
-// get venture ID from URL
+// Get ID from URL
 const params = new URLSearchParams(window.location.search);
 const ventureId = params.get("id");
 
+console.log("URL ID:", ventureId);
+
 async function loadDetail() {
   try {
-    // load venture list
+    // Load venture index
     const vIndexRes = await fetch(BASE + "/ventures/index.json");
     const vFiles = await vIndexRes.json();
 
     let venture = null;
 
-    // find matching venture
+    // Find matching venture
     for (let file of vFiles) {
       const res = await fetch(BASE + "/ventures/" + file);
       const v = await res.json();
 
-      if (v.id === ventureId) {
+      console.log("Checking:", v.id);
+
+      if ((v.id || "").trim() === (ventureId || "").trim()) {
         venture = v;
         break;
       }
     }
 
+    // If not found
     if (!venture) {
       document.getElementById("ventureDetail").innerHTML =
         "<p>Venture not found.</p>";
       return;
     }
 
-    // load students
+    // Load students
     const sIndexRes = await fetch(BASE + "/students/index.json");
     const sFiles = await sIndexRes.json();
 
@@ -57,7 +62,7 @@ async function loadDetail() {
       const res = await fetch(BASE + "/students/" + file);
       const s = await res.json();
 
-      if (s.id === venture.owner_student_id.trim()) {
+      if ((s.id || "").trim() === (venture.owner_student_id || "").trim()) {
         owner = s;
         break;
       }
@@ -103,7 +108,15 @@ function render(v, owner) {
 
             ${
               owner.linkedin
-                ? `<a href="${owner.linkedin}" target="_blank" class="text-blue-600 text-smloadDetail();
+                ? `<a href="${owner.linkedin}" target="_blank" class="textnown</p>"
+      }
+
+    </div>
+  `;
+}
+
+// Run it
+loadDetail();
 </script>
 
 </body>
