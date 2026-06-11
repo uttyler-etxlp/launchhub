@@ -109,7 +109,11 @@ function render(v, owner) {
 
             ${
               owner.linkedin
-                ? `<a href="${owner.linkedin}" target="_blank" class="textnown</p>"
+                ? `<a href="${owner.linkedin}" target="_blank" class="text-blue-600 text-sm">LinkedIn →</a>`
+                : ""
+            }
+          `
+          : "<p>Unknown</p>"
       }
 
     </div>
