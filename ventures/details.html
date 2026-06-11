@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Venture | LaunchHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#F8F6F3]">
+
+<div class="max-w-4xl mx-auto p-6">
+
+  <a href="./" class="text-sm text-blue-600">&larr; Back to Ventures</a>
+
+  <div id="ventureDetail" class="mt-6"></div>
+
+</div>
+
+<script>
+const BASE = "../content";
+
+// get venture ID from URL
+const params = new URLSearchParams(window.location.search);
+const ventureId = params.get("id");
+
+async function loadDetail() {
+  try {
+    // load venture list
+    const vIndexRes = await fetch(BASE + "/ventures/index.json");
+    const vFiles = await vIndexRes.json();
+
+    let venture = null;
+
+    // find matching venture
+    for (let file of vFiles) {
+      const res = await fetch(BASE + "/ventures/" + file);
+      const v = await res.json();
+
+      if (v.id === ventureId) {
+        venture = v;
+        break;
+      }
+    }
+
+    if (!venture) {
+      document.getElementById("ventureDetail").innerHTML =
+        "<p>Venture not found.</p>";
+      return;
+    }
+
+    // load students
+    const sIndexRes = await fetch(BASE + "/students/index.json");
+    const sFiles = await sIndexRes.json();
+
+    let owner = null;
+
+    for (let file of sFiles) {
+      const res = await fetch(BASE + "/students/" + file);
+      const s = await res.json();
+
+      if (s.id === venture.owner_student_id.trim()) {
+        owner = s;
+        break;
+      }
+    }
+
+    render(venture, owner);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("ventureDetail").innerHTML =
+      "<p>Error loading venture.</p>";
+  }
+}
+
+function render(v, owner) {
+  document.getElementById("ventureDetail").innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow">
+
+      <h1 class="text-3xl font-bold text-[#002F6C] mb-2">
+        ${v.name}
+      </h1>
+
+      <p class="text-sm text-gray-500 mb-4">
+        Stage: ${v.stage || "N/A"}
+      </p>
+
+      <p class="text-gray-700">
+        ${v.description || ""}
+      </p>
+
+      <hr class="my-6">
+
+      <h2 class="text-xl font-semibold mb-2">
+        Founder
+      </h2>
+
+      ${
+        owner
+          ? `
+            <p class="font-medium">${owner.name}</p>
+            <p class="text-sm text-gray-500">${owner.major || ""}</p>
+            <p class="mt-2 text-sm">${owner.bio || ""}</p>
+
+            ${
+              owner.linkedin
+                ? `<a href="${owner.linkedin}" target="_blank" class="text-blue-600 text-smloadDetail();
+</script>
+
+</body>
+</html>
