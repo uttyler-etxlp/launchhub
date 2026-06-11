@@ -74,12 +74,7 @@ function render(ventures, students) {
   let html = "";
 
   ventures.forEach(v => {
-
     const key = (v.owner_student_id || "").trim();
-
-    console.log("Looking for:", key);
-    console.log("Available:", Object.keys(students));
-
     const owner = students[key];
 
     html += `
