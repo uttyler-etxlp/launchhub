@@ -1,1 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ventures | LaunchHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
+<body class="bg-[#F8F6F3]">
+
+<div class="max-w-6xl mx-auto p-6">
+
+  <h1 class="text-4xl font-bold text-[#002F6C] mb-8">
+    Ventures
+  </h1>
+
+  <div id="ventures" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+</div>
+
+<script>
+const BASE = "/launchhub/content";
+
+async function loadData() {
+  const indexRes = await fetch(BASE + "/ventures/index.json");
+  const ventureFiles = await indexRes.json();
+
+  const studentIndex = await fetch(BASE + "/students/index.json");
+  const studentFiles = await studentIndex.json();
+
+  const students = {};
+
+  for (let f of studentFiles) {
+    const res = await fetch(BASE + "/students/" + f);
+    const s = await res.json();
+    if (!s.placeholder) students[s.id] = s;
+  }
+
+  const ventures = [];
+
+  for (let file of ventureFiles) {
+    const res = await fetch(BASE + "/ventures/" + file);
+    const data = await res.json();
+
+    if (!data.placeholder) {
+      ventures.push(data);
+    }
+  }
+
+  render(ventures, students);
+}
+
+function render(ventures, students) {
+  let html = "";
+
+  ventures.forEach(v => {
+    const owner = students[v.owner_student_id];
+
+    html += `
+      <div class="bg-white p-5 rounded-lg shadow">
+        <h2 class="text-xl font-semibold text-[#002F6C]">
+          ${v.name}
+        </h2>
+
+        <p class="text-sm text-gray-500">
+          Stage: ${v.stage || "N/A"}
+        </p>
+
+        <p class="mt-3 text-sm">
+          ${v.description || ""}
+        </p>
+
+        <p class="mt-4 text-xs text-gray-400">
+          Founder: ${owner ? owner.name : "Unknown"}
+        </p>
+      </div>
+    `;
+  });
+
+  document.getElementById("ventures").innerHTML = html;
+}
+
+loadData();
+</script>
+
+</body>
+</html>
