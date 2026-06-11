@@ -77,25 +77,28 @@ function render(ventures, students) {
     const key = (v.owner_student_id || "").trim();
     const owner = students[key];
 
-    html += `
-      <div class="bg-white p-5 rounded-lg shadow">
-        <h2 class="text-xl font-semibold text-[#002F6C]">
-          ${v.name || "Unnamed"}
-        </h2>
+   html += `
+  <a href="detail.html?id=${v.id}" class="block">
+    <div class="bg-white p-5 rounded-lg shadow hover:shadow-lg transition">
+      <h2 class="text-xl font-semibold text-[#002F6C]">
+        ${v.name || "Unnamed"}
+      </h2>
 
-        <p class="text-sm text-gray-500">
-          Stage: ${v.stage || "N/A"}
-        </p>
+      <p class="text-sm text-gray-500">
+        Stage: ${v.stage || "N/A"}
+      </p>
 
-        <p class="mt-3 text-sm">
-          ${v.description || ""}
-        </p>
+      <p class="mt-3 text-sm">
+        ${v.description || ""}
+      </p>
 
-        <p class="mt-4 text-xs text-gray-400">
-          Founder: ${owner ? owner.name : "Unknown"}
-        </p>
-      </div>
-    `;
+      <p class="mt-4 text-xs text-gray-400">
+        Founder: ${owner ? owner.name : "Unknown"}
+      </p>
+    </div>
+  </a>
+`;
+
   });
 
   document.getElementById("ventures").innerHTML = html;
