@@ -1,0 +1,91 @@
+{
+  "backend": {
+    "name": "github",
+    "repo": "uttyler-etxlp/launchhub",
+    "branch": "main"
+  },
+
+  "media_folder": "images",
+  "public_folder": "/images",
+
+  "collections": [
+
+    {
+      "name": "competitions",
+      "label": "Competitions",
+      "folder": "content/competitions",
+      "create": true,
+      "format": "json",
+      "fields": [
+        { "name": "id", "label": "ID", "type": "string" },
+        { "name": "name", "label": "Name", "type": "string" },
+        { "name": "description", "label": "Description", "type": "text" },
+        { "name": "active", "label": "Active", "type": "boolean" },
+        { "name": "voting_enabled", "label": "Voting Enabled", "type": "boolean" }
+      ]
+    },
+
+    {
+      "name": "students",
+      "label": "Students",
+      "folder": "content/students",
+      "create": true,
+      "format": "json",
+      "fields": [
+        { "name": "id", "label": "ID", "type": "string" },
+        { "name": "name", "label": "Name", "type": "string" },
+        { "name": "email", "label": "Email", "type": "string" },
+        { "name": "major", "label": "Major", "type": "string" },
+        { "name": "bio", "label": "Bio", "type": "text" },
+
+        {
+          "name": "ventures",
+          "label": "Ventures (IDs)",
+          "type": "list",
+          "field": { "type": "string" }
+        }
+      ]
+    },
+
+    {
+      "name": "ventures",
+      "label": "Ventures",
+      "folder": "content/ventures",
+      "create": true,
+      "format": "json",
+      "fields": [
+        { "name": "id", "label": "ID", "type": "string" },
+        { "name": "name", "label": "Name", "type": "string" },
+        { "name": "description", "label": "Description", "type": "text" },
+        { "name": "owner_student_id", "label": "Owner Student ID", "type": "string" },
+        { "name": "competition_id", "label": "Competition ID", "type": "string" },
+        { "name": "stage", "label": "Stage", "type": "string" }
+      ]
+    },
+
+    {
+      "name": "mentors",
+      "label": "Mentors",
+      "folder": "content/mentors",
+      "create": true,
+      "format": "json",
+      "fields": [
+        { "name": "id", "label": "ID", "type": "string" },
+        { "name": "name", "label": "Name", "type": "string" },
+        { "name": "email", "label": "Email", "type": "string" },
+        { "name": "organization", "label": "Organization", "type": "string" },
+
+        {
+          "name": "expertise",
+          "label": "Expertise",
+          "type": "list",
+          "field": { "type": "string" }
+        },
+
+        { "name": "bio", "label": "Bio", "type": "text" },
+        { "name": "approved", "label": "Approved", "type": "boolean" }
+      ]
+    }
+
+  ]
+}
