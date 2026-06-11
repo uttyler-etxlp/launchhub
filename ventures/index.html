@@ -77,6 +77,11 @@ function render(ventures, students) {
     return;
   }
 
+console.log("Students object:", students);
+console.log("Student keys:", Object.keys(students));
+
+console.log("Owner lookup value:", v.owner_student_id);
+  
   let html = "";
 
   ventures.forEach(v => {
