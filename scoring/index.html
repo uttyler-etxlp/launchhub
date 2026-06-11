@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LaunchHub Scoring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-4xl mx-auto p-6">
+
+  <h1 class="text-3xl font-bold mb-6">
+    Judge Scoring
+  </h1>
+
+  <div id="app"></div>
+
+</div>
+
+<script>
+const API = "PASTE_YOUR_APPS_SCRIPT_URL";
+
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get("token");
+
+let judge;
+let teams;
+
+async function init() {
+  // get judge
+  const res1 = await fetch(API + "?action=getJudge&token=" + token);
+  const data1 = await res1.json();
+
+  judge = data1.judge;
+
+  if (!judge) {
+    document.getElementById("app").innerHTML = "Invalid link";
+    return;
+  }
+
+  // get data
+  const res2 = await fetch(API + "?action=getData");
+  const data2 = await res2.json();
+
+  teams = data2.teams.filter(t => t.competition_id === judge.competition_id);
+
+  render();
+}
+
+function render() {
+  let html = `<h2 class="mb-4">Judge: ${judge.name}</h2>`;
+
+  teams.forEach(team => {
+    html += `
+      <div class="bg-white p-4 mb-4 rounded shadow">
+        <h3 class="font-bold">${team.name}</h3>
+        <p class="text-sm mb-3">${team.description}</p>
+
+        <input type="number" min="1" max="10"
+          id="score-${team.id}"
+          class="border p-2 w-full"
+          placeholder="Score (1-10)" />
+
+        <button onclick="submitScore('${team.id}')"
+          class="mt-3 bg-blue-600 text-white px-4 py-2 rounded">
+          Submit Score
+        </button>
+      </div>
+    `;
+  });
+
+  document.getElementById("app").innerHTML = html;
+}
+
+async function submitScore(teamId) {
+ getElementById("score-" + teamId).value;
+
+  await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "submitScore",
+      judge_id: judge.id,
+      team_id: teamId,
+      criterion: "overall",
+      score: score
+    })
+  });
+
+  alert("Score submitted!");
+}
+
+init();
+</script>
+
+</body>
+</html>
