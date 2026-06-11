@@ -80,7 +80,12 @@ function render(ventures, students) {
   let html = "";
 
   ventures.forEach(v => {
-    const owner = students[v.owner_student_id];
+   // const owner = students[v.owner_student_id];
+    
+    const key = v.owner_student_id;
+    console.log("Looking for student ID:", key);
+    console.log("Available students:", Object.keys(students));
+    const owner = students[key];
 
     html += `
       <div class="bg-white p-5 rounded-lg shadow">
