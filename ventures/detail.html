@@ -103,7 +103,7 @@ function render(v, owner) {
       ${
         owner
           ? `
-            <p class="font-medium">${owner.name}</p>
+           <a href="../students/detail.html?id=${owner.id}" class="font-medium text-blue-600">${owner.name}</a>
             <p class="text-sm text-gray-500">${owner.major || ""}</p>
             <p class="mt-2 text-sm">${owner.bio || ""}</p>
 
